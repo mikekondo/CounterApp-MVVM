@@ -8,6 +8,7 @@
 import Foundation
 import RxSwift
 import RxCocoa
+import RxRelay
 
 // MARK: Protocol Inputs
 protocol ViewModelInputs {
@@ -18,7 +19,7 @@ protocol ViewModelInputs {
 
 // MARK: Protocol Outputs
 protocol ViewModelOutputs {
-    var countPublishSubject: PublishSubject<Int> { get }
+    var countPublishRelay: PublishRelay<Int> { get }
 }
 
 class ViewModel: ViewModelInputs,ViewModelOutputs {
@@ -28,7 +29,7 @@ class ViewModel: ViewModelInputs,ViewModelOutputs {
     var resetButtonObservable: Observable<Void>
 
     // MARK: Outputs
-    var countPublishSubject = PublishSubject<Int>()
+    var countPublishRelay = PublishRelay<Int>()
 
     // MARK: Model Connect
     var calculator = Calculator()
@@ -49,21 +50,21 @@ class ViewModel: ViewModelInputs,ViewModelOutputs {
         plusButtonObservable.subscribe(onNext: {
             [weak self] in
             self?.calculator.addition()
-            self?.countPublishSubject.onNext(self?.calculator.number ?? 0)
+            self?.countPublishRelay.accept(self?.calculator.number ?? 0)
         })
         .disposed(by: disposeBag)
 
         minusButtonObservable.subscribe(onNext: {
             [weak self] in
             self?.calculator.subtraction()
-            self?.countPublishSubject.onNext(self?.calculator.number ?? 0)
+            self?.countPublishRelay.accept(self?.calculator.number ?? 0)
         })
         .disposed(by: disposeBag)
 
         resetButtonObservable.subscribe(onNext: {
             [weak self] in
             self?.calculator.reset()
-            self?.countPublishSubject.onNext(self?.calculator.number ?? 0)
+            self?.countPublishRelay.accept(self?.calculator.number ?? 0)
         })
         .disposed(by: disposeBag)
     }

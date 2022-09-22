@@ -24,7 +24,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.setupBindings()
-        viewModel.countPublishSubject.subscribe(onNext: { count in
+        viewModel.countPublishRelay.subscribe(onNext: { count in
             self.numberLabel.text = String(count)
         })
         .disposed(by: disposeBag)
